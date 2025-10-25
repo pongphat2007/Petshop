@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ร้านขายสัตว์เลี้ยงของพงศ์พัฒน์ 🐾</title>
+  <style>
+    body {
+      font-family: "Prompt", sans-serif;
+      margin: 0;
+      background-color: #fffafc;
+      color: #333;
+      font-size: 18px;
+    }
+
+    header {
+      background-color: #ffc1cc;
+      padding: 25px;
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .category-buttons {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    .category-buttons button {
+      background-color: #ffd6dc;
+      border: none;
+      border-radius: 25px;
+      padding: 14px 35px;
+      margin: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .category-buttons button:hover {
+      background-color: #ffb6c1;
+      transform: scale(1.05);
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 1500px;
+      margin: auto;
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      width: calc(20% - 10px);
+      text-align: center;
+      padding: 20px;
+      transition: 0.3s;
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+
+    .card:hover { transform: scale(1.05); }
+
+    .card h4 { margin: 12px 0 8px; font-size: 20px; color: #444; }
+
+    .card p { font-size: 18px; margin: 5px 0; color: #777; }
+
+    .stock { color: #555; font-size: 16px; margin-top: 5px; }
+
+    button.buy {
+      margin-top: 10px;
+      background-color: #ff8fab;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 28px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button.buy:hover {
+      background-color: #ff5c8a;
+      transform: scale(1.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #888;
+      font-size: 16px;
+    }
+
+    /* ฟอร์มสั่งซื้อ */
+    #orderForm {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .form-box {
+      background: white;
+      border-radius: 25px;
+      padding: 35px;
+      width: 400px;
+      text-align: left;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .form-box h3 { text-align: center; margin-bottom: 20px; font-size: 24px; }
+
+    input, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+
+    .form-buttons button {
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .cancel { background-color: #ccc; color: #333; }
+    .submit { background-color: #ff8fab; color: white; }
+    .cancel:hover { background-color: #aaa; }
+    .submit:hover { background-color: #ff5c8a; }
+
+    @media (max-width: 1200px) { .card { width: calc(25% - 10px); } }
+    @media (max-width: 900px) { .card { width: calc(33.33% - 10px); } }
+    @media (max-width: 600px) { .card { width: calc(50% - 10px); } }
+  </style>
+</head>
+<body>
+
+  <header>🐾 ร้านขายสัตว์เลี้ยงของพงศ์พัฒน์ 🐾</header>
+
+  <div class="category-buttons">
+    <button onclick="showCategory('land')">สัตว์บก</button>
+    <button onclick="showCategory('water')">สัตว์น้ำ</button>
+  </div>
+
+  <div class="container" id="productContainer"></div>
+
+  <footer>© 2025 ร้านขายสัตว์เลี้ยงของพงศ์พัฒน์</footer>
+
+  <!-- ฟอร์มสั่งซื้อ -->
+  <div id="orderForm">
+    <div class="form-box">
+      <h3>🛒 สั่งซื้อสินค้า</h3>
+      <div id="selectedProduct" style="margin-bottom: 10px; font-size:18px;"></div>
+      <input type="text" id="name" placeholder="ชื่อของคุณ">
+      <input type="text" id="phone" placeholder="เบอร์โทร">
+      <textarea id="address" rows="3" placeholder="ที่อยู่จัดส่ง"></textarea>
+      <div class="form-buttons">
+        <button class="cancel" onclick="closeForm()">ยกเลิก</button>
+        <button class="submit" onclick="submitOrder()">ส่งคำสั่งซื้อ</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const token = "8195526446:AAHYZx1miXZhPsE1kr1dduLYOrxLKdjm4aU";
+    const chatId = "8151676502";
+
+    const products = {
+      land: [
+        {name: "เจ้าหมาน้อย", img: "dog1.jpg", price: 2500, stock: 10},
+        {name: "เจ้าเหมียว", img: "cat1.jpg", price: 3000, stock: 10},
+        {name: "น้องต่ายกระโดด", img: "rabbit1.jpg", price: 1200, stock: 10},
+        {name: "หนูแฮมมี่", img: "hamster1.jpg", price: 450, stock: 10},
+        {name: "เต่ากลางแดด", img: "turtle1.jpg", price: 800, stock: 10},
+        {name: "เม่นแหลมแหลม", img: "hedgehog1.jpg", price: 1000, stock: 10},
+        {name: "ลิงน้อยซนซน", img: "monkey1.jpg", price: 3500, stock: 10},
+        {name: "นกแก้วพูดได้", img: "parrot1.jpg", price: 2200, stock: 10},
+        {name: "ม้าน้อยพาขี่", img: "pony1.jpg", price: 12000, stock: 10},
+        {name: "หมูจิ๋วขี้อ้อน", img: "piglet1.jpg", price: 2800, stock: 10}
+      ],
+      water: [
+        {name: "ปลาทองโชคดี", img: "goldfish1.jpg", price: 120, stock: 10},
+        {name: "ปลาคราฟลายงาม", img: "koi1.jpg", price: 400, stock: 10},
+        {name: "ปลาการ์ตูน", img: "clownfish1.jpg", price: 250, stock: 10},
+        {name: "ปลาหมอสี", img: "cichlid1.jpg", price: 300, stock: 10},
+        {name: "ปลากัดไทย", img: "betta1.jpg", price: 180, stock: 10},
+        {name: "กุ้งแคระแดง", img: "shrimp1.jpg", price: 150, stock: 10},
+        {name: "ปูน้ำจืด", img: "crab1.jpg", price: 200, stock: 10},
+        {name: "เต่าน้ำมรกต", img: "aquaturtle1.jpg", price: 900, stock: 10},
+        {name: "ปลาหางนกยูง", img: "guppy1.jpg", price: 100, stock: 10},
+        {name: "ปลานีออน", img: "neon1.jpg", price: 80, stock: 10}
+      ]
+    };
+
+    let currentCategory = "land";
+    let selectedProduct = null;
+
+    function showCategory(category) {
+      currentCategory = category;
+      const container = document.getElementById("productContainer");
+      container.innerHTML = "";
+      products[category].forEach((p, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${p.img}" alt="${p.name}">
+          <h4>${p.name}</h4>
+          <p>${p.price.toLocaleString()} บาท</p>
+          <button class="buy" onclick="openForm('${category}', ${index})">ซื้อ</button>
+          <div class="stock">สินค้าเหลือ: ${p.stock} ชิ้น</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    let selectedCategory = "";
+    let selectedIndex = -1;
+
+    function openForm(category, index) {
+      selectedCategory = category;
+      selectedIndex = index;
+      selectedProduct = products[category][index];
+      document.getElementById("selectedProduct").innerText = "สินค้า: " + selectedProduct.name;
+      document.getElementById("orderForm").style.display = "flex";
+    }
+
+    function closeForm() {
+      document.getElementById("orderForm").style.display = "none";
+    }
+
+    async function submitOrder() {
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const address = document.getElementById("address").value;
+
+      if (!name || !phone || !address) {
+        alert("กรุณากรอกข้อมูลให้ครบค่ะ 💕");
+        return;
+      }
+
+      const product = products[selectedCategory][selectedIndex];
+      if (product.stock <= 0) {
+        alert("สินค้าหมดแล้วค่ะ 😢");
+        closeForm();
+        return;
+      }
+
+      product.stock--;
+      showCategory(selectedCategory);
+
+      const now = new Date();
+      const dateTime = now.toLocaleString("th-TH", { timeZone: "Asia/Bangkok", hour12: false });
+
+      const text = `🛒 สั่งซื้อใหม่จากร้านสัตว์เลี้ยงของพงศ์พัฒน์ 🐾
+━━━━━━━━━━━━━━
+🐶 สินค้า: ${product.name}
+📦 สินค้าเหลือ: ${product.stock} ชิ้น
+💰 ราคา: ${product.price.toLocaleString()} บาท
+👤 ชื่อ: ${name}
+📞 เบอร์: ${phone}
+🏠 ที่อยู่: ${address}
+🕓 เวลา: ${dateTime}
+━━━━━━━━━━━━━━
+🔥 ส่งของอย่ามัวแต่นอนอ้วน 🔥`;
+
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({chat_id: chatId, text})
+      });
+
+      alert("ส่งคำสั่งซื้อเรียบร้อยแล้วค่ะ 💖");
+      closeForm();
+    }
+
+    showCategory("land");
+  </script>
+</body>
+</html>
